@@ -1,0 +1,66 @@
+{meta {:name          "Send DAI"
+       :description   "Who needs mETH?"
+       :documentation "flexdapps.com"}
+  
+ views/suggestions
+ [view
+  [image {:uri "https://media.giphy.com/media/7OVCBRoK8dS9ZG01Tt/giphy.gif" :style {:width "100%"}}]]
+ 
+ views/preview
+ (let [{outgoing :outgoing} properties]
+  (if outgoing
+    [view
+     [text {:style {:color "white"}} "Sent DAI!"]]
+    [view
+     [text {:style {:color "white"}} "Received DAI!"]]))
+
+ views/short-preview
+ (let [{outgoing :outgoing} properties]
+  (if outgoing
+    [view
+     [text {:style {:color "white"}} "Sent DAI!"]]
+    [view
+     [text {:style {:color "white"}} "Received DAI!"]]))
+ 
+ events/send-tx
+ (let [{value :value} properties]
+  [ethereum/send-transaction {:to "0xcc73dfbee9c40b7062e8fbab55ea4910e8cd8826"
+                              :method "swapEthToTokenWithDestination(address,uint256,address)"
+                              :params ["0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359"   ; Address of the DAI token on Kyber
+                                       "0"                                            ; Minimum tokens that we care to receive
+                                       "0x9f3ae1d603320980Bd7FD79EB6dF981d8A2A0e24"]  ; Address of the final recipient
+                              :value value
+                              :on-result [log {:value "Sent !"}]}])                             
+ 
+ events/get-eth-to-send
+ (let [{value :value} properties]
+  [arithmetic {:operation :times
+               :values [1000000000000000000 value 1000000000000000000]
+               :on-result [send-tx]}])
+ 
+ events/set-dai-price
+ (let [{[expected] :result dai-amount :dai-amount} properties]
+  [arithmetic {:operation :divide
+               :values [dai-amount expected]
+               :on-result [get-eth-to-send]}])
+ 
+ events/get-dai-price
+ (let [{dai-amount :dai-amount} properties]
+  [ethereum/call {:to        "0x818E6FECD516Ecc3849DAf6845e3EC868087B755" 
+                  :method    "getExpectedRate(address,address,uint256)"
+                  :params    ["0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" ;ETH
+                              "0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359" ;DAI
+                              1]                                           ;This number doesn't matter
+                  :outputs   ["uint256" "uint256"]
+                  :on-result [set-dai-price {:dai-amount dai-amount}]}])
+                                           
+ hooks/chat.command.send-dai
+ {:description   "Send DAI"
+  :scope         #{:personal-chats}
+  :preview       [preview]
+  :short-preview [short-preview]
+  :on-send-sync  [get-dai-price]
+  :parameters    [{:id          :dai-amount
+                   :type        :text
+                   :placeholder "Amount of DAI to send"
+                   :suggestions [suggestions]}]}}
