@@ -20,6 +20,7 @@ Kyber network's own contracts currently allow you to purchase a token with ETH b
 The result is exactly the same as calling the Kyber Proxy directly, except the token is immedietely delivered to the recipient.
 
 ![](https://media.giphy.com/media/3boU1mIcXHc40/giphy.gif)
+
 (Search proxy gif and you get this bad ass chica)
 
 ## extension.txt
