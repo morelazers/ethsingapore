@@ -1,8 +1,8 @@
-# ETH -> Kyber -> DAI
+# (Status.im [ETH -> Kyber -> DAI])
 
 ![](https://i.giphy.com/media/jnTYCAjDsFxwcMAJdK/giphy.webp)
 
-I'm not stable, but my DAI is. The aforementioned reason is a fantastic argument for being able to instantly swap your ETH into DAI and send it to a contact. Currently it's only possible to send your contacts assets that you already hold, but with the same number of transactions you could send them anything which has an ETH pair on Kyber.
+I'm not stable, but my DAI is. The aforementioned reason is a fantastic argument for being able to instantly swap your ETH into DAI and send it to a contact. Within Status.im, currently it's only possible to send your contacts assets that you already hold, but with the same number of transactions you could send them anything which has an ETH pair on Kyber.
 
 Sending an asset pegged to fiat within a chat context is a use-case that is tried, tested and proved.
 
